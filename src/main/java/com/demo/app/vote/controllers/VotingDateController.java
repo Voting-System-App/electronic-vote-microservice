@@ -1,6 +1,7 @@
 package com.demo.app.vote.controllers;
 
 import com.demo.app.vote.entities.VotingDate;
+import com.demo.app.vote.entities.VotingGroup;
 import com.demo.app.vote.services.VotingDateService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

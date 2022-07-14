@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.constraints.NotEmpty;
-import java.sql.Time;
 
 @Document(collection = "voting_group")
 @Data
@@ -18,7 +17,7 @@ public class VotingGroup {
     @NotEmpty
     private String name;
     @JsonFormat(pattern = "HH:mm")
-    private Time time;
+    private String time;
     @Field(name = "is_active")
     private Boolean isActive;
     @ManyToOne

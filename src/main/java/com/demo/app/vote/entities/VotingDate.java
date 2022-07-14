@@ -1,9 +1,9 @@
 package com.demo.app.vote.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
 @Document(collection = "voting_date")
@@ -11,6 +11,6 @@ import java.util.Date;
 public class VotingDate {
     @Id
     private String id;
-    @NotEmpty
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
 }
