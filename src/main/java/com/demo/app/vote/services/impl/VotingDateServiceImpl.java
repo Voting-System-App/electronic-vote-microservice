@@ -5,20 +5,15 @@ import com.demo.app.vote.entities.VotingGroup;
 import com.demo.app.vote.repositories.VotingDateRepository;
 import com.demo.app.vote.repositories.VotingGroupRepository;
 import com.demo.app.vote.services.VotingDateService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import reactor.core.scheduler.Schedulers;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -61,7 +56,23 @@ public class VotingDateServiceImpl implements VotingDateService {
     public Mono<VotingDate> update(VotingDate votingDate, String id) {
         return votingDateRepository.findById(id).flatMap(result->{
             result.setDate(votingDate.getDate());
-            return votingDateRepository.save(result);
+            return votingGroupRepository.findByVotingDate_Id(id).flatMap(groups->{
+                        groups.setVotingDate(result);
+                        return votingGroupRepository.save(groups);
+                    }
+            ).then(votingDateRepository.save(result));
         });
+    }
+
+    @Scheduled(cron = "0 0 * * * *")
+    public void updateVotingGroup(){
+        LocalDate localDate = LocalDate.now();
+        /*.findByVotingDate_Date(Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))*/
+        votingGroupRepository.findById("62d08e163699e9128f17adf2").flatMap(result->{
+            result.setIsActive(true);
+            return votingGroupRepository.save(result);
+        }).subscribeOn(Schedulers.immediate())
+                .subscribe();
+        System.out.println(localDate);
     }
 }
