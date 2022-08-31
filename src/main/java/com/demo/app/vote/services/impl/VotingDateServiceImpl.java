@@ -34,7 +34,7 @@ public class VotingDateServiceImpl implements VotingDateService {
     }
     @Override
     @Transactional
-    public Mono<VotingDate> save(VotingDate votingDate){
+    public Flux<VotingGroup> save(VotingDate votingDate){
         List<String> group = Arrays.asList("A","B","C","D","E","F","G","H","I","J");
         List<String> date = Arrays.asList("07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00");
         List<VotingGroup> list = new ArrayList<>();
@@ -48,7 +48,7 @@ public class VotingDateServiceImpl implements VotingDateService {
                 list.add(data);
             }
             return votingGroupRepository.saveAll(list).then(Mono.just(result));
-        });
+        }).flatMapMany(groupDate-> votingGroupRepository.findByVotingDate_Id(groupDate.getId()));
     }
 
     @Override
@@ -62,17 +62,5 @@ public class VotingDateServiceImpl implements VotingDateService {
                     }
             ).then(votingDateRepository.save(result));
         });
-    }
-
-    @Scheduled(cron = "0 0 * * * *")
-    public void updateVotingGroup(){
-        LocalDate localDate = LocalDate.now();
-        /*.findByVotingDate_Date(Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))*/
-        votingGroupRepository.findById("62d08e163699e9128f17adf2").flatMap(result->{
-            result.setIsActive(true);
-            return votingGroupRepository.save(result);
-        }).subscribeOn(Schedulers.immediate())
-                .subscribe();
-        System.out.println(localDate);
     }
 }

@@ -26,7 +26,7 @@ public class VotingDateController {
         return ResponseEntity.ok(dates);
     }
     @PostMapping
-    public ResponseEntity<Mono<VotingDate>> saveDate(@RequestBody VotingDate votingDate){
+    public ResponseEntity<Flux<VotingGroup>> saveDate(@RequestBody VotingDate votingDate){
         return ResponseEntity.ok(votingDateService.save(votingDate));
     }
     @PutMapping("/{id}")
