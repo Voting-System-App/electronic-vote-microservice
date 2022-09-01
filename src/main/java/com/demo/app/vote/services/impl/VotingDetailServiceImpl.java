@@ -26,8 +26,4 @@ public class VotingDetailServiceImpl implements VotingDetailService {
         return votingDetailRepository.save(votingDetail);
     }
 
-    @Override
-    public Mono<Void> delete(String id) {
-        return votingDetailRepository.deleteById(id);
-    }
 }

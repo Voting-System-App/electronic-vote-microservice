@@ -7,5 +7,4 @@ import reactor.core.publisher.Mono;
 public interface VotingDetailService {
     Flux<VotingDetail> findAll();
     Mono<VotingDetail> save(VotingDetail votingDetail);
-    Mono<Void> delete(String id);
 }
