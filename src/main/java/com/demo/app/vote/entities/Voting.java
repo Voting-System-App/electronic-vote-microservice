@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Voting {
     @Id
     private String id;
+    private String description;
     @Field(name = "voting_status")
     @Enumerated(EnumType.STRING)
     private VotingStatus votingStatus;
