@@ -1,6 +1,7 @@
 package com.demo.app.vote.entities;
 
-import jakarta.persistence.ManyToOne;
+import com.demo.app.vote.entities.models.Candidate;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,8 +15,9 @@ import java.util.List;
 public class VotingDetail {
     @Id
     private String id;
-    @Field(name = "candidate_id")
-    private List<String> candidateId= new ArrayList<>();
+    @Field(name = "candidate_list")
+    @OneToMany
+    private List<Candidate> candidateList= new ArrayList<>();
     @ManyToOne
     private Voting voting;
 }

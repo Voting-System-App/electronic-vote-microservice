@@ -5,6 +5,8 @@ import com.demo.app.vote.entities.VotingGroup;
 import com.demo.app.vote.repositories.VotingDateRepository;
 import com.demo.app.vote.repositories.VotingGroupRepository;
 import com.demo.app.vote.services.VotingDateService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import reactor.core.scheduler.Schedulers;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -32,6 +35,12 @@ public class VotingDateServiceImpl implements VotingDateService {
     public Flux<VotingDate> findAll() {
         return votingDateRepository.findAll();
     }
+
+    @Override
+    public Flux<VotingDate> findAllByDate(Date date) {
+        return votingDateRepository.findByDate(date);
+    }
+
     @Override
     @Transactional
     public Flux<VotingGroup> save(VotingDate votingDate){
@@ -49,6 +58,14 @@ public class VotingDateServiceImpl implements VotingDateService {
             }
             return votingGroupRepository.saveAll(list).then(Mono.just(result));
         }).flatMapMany(groupDate-> votingGroupRepository.findByVotingDate_Id(groupDate.getId()));
+    }
+
+    @Override
+    public Flux<VotingGroup> updateVotingGroupByDateGroup(String name,Date date) {
+        return votingGroupRepository.findByVotingDate_Date(date).flatMap(list->{
+            list.setIsActive(false);
+            return votingGroupRepository.save(list);
+        });
     }
 
     @Override

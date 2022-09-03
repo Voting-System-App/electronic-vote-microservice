@@ -19,4 +19,6 @@ public class Voting {
     private VotingStatus votingStatus;
     @OneToOne
     private VotingDate votingDate;
+    @Field(name = "is_active")
+    private Boolean isActive;
 }
