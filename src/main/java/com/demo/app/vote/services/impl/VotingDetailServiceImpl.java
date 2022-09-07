@@ -26,4 +26,24 @@ public class VotingDetailServiceImpl implements VotingDetailService {
         return votingDetailRepository.save(votingDetail);
     }
 
+    @Override
+    public Mono<Long> findAllByCandidateListId(String id) {
+        return votingDetailRepository.findAllByCandidateList_Id(id).count();
+    }
+
+    @Override
+    public Mono<Long> findAllByCandidateListPoliticalPartyId(String id) {
+        return votingDetailRepository.findAllByCandidateList_PoliticalParty_Id(id).count();
+    }
+
+    @Override
+    public Mono<Long> findAllByVoterCityStateName(String name) {
+        return votingDetailRepository.findAllByVoter_City_State_Name(name).count();
+    }
+
+    @Override
+    public Mono<Long> findAllByVotingId(String id) {
+        return votingDetailRepository.findAllByVoting_Id(id).count();
+    }
+
 }

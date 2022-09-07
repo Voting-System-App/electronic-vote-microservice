@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Repository
 public interface VotingGroupRepository extends ReactiveMongoRepository<VotingGroup,String> {
-    Flux<VotingGroup> findByVotingDate_Id(String id);
-    Flux<VotingGroup> findByNameAndAndVotingDate_Date(String name,Date date);
-    Flux<VotingGroup> findByVotingDate_Date(Date date);
+    Flux<VotingGroup> findAllByVotingDate_Id(String id);
+    Flux<VotingGroup> findAllByNameAndAndVotingDate_DateBetween(String name,Date startDate,Date endDate);
+    Flux<VotingGroup> findAllByVotingDate_DateBetween(Date startDate,Date endDate);
 }

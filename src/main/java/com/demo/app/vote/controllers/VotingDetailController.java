@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @Tag(name = "Voting Detail Api", description = "Api for testing the endpoint for voting detail assignation")
-@RequestMapping("/voting/detail")
+@RequestMapping("/vote/detail")
 public class VotingDetailController {
 
     private final VotingDetailService votingDetailService;
@@ -27,5 +27,22 @@ public class VotingDetailController {
     @PostMapping
     public ResponseEntity<Mono<VotingDetail>> saveVoting(@RequestBody VotingDetail votingDetail){
         return ResponseEntity.ok(votingDetailService.save(votingDetail));
+    }
+
+    @GetMapping("/graphic/electoral/voting/{id}")
+    public ResponseEntity<Mono<Long>> findAllByVotingId(@PathVariable String id){
+        return ResponseEntity.ok(votingDetailService.findAllByVotingId(id));
+    }
+    @GetMapping("/graphic/candidate/{id}")
+    public ResponseEntity<Mono<Long>> findAllByCandidateId(@PathVariable String id){
+        return ResponseEntity.ok(votingDetailService.findAllByCandidateListId(id));
+    }
+    @GetMapping("/graphic/state/{name}")
+    public ResponseEntity<Mono<Long>> findAllByCityName(@PathVariable String name){
+        return ResponseEntity.ok(votingDetailService.findAllByVoterCityStateName(name));
+    }
+    @GetMapping("/graphic/political/party/{id}")
+    public ResponseEntity<Mono<Long>> findAllByPoliticalParty(@PathVariable String id){
+        return ResponseEntity.ok(votingDetailService.findAllByCandidateListPoliticalPartyId(id));
     }
 }

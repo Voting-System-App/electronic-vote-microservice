@@ -23,13 +23,13 @@ public class VotingServiceImpl implements VotingService {
 
     @Override
     public Mono<Voting> save(Voting voting) {
+        voting.setIsActive(false);
         return votingRepository.save(voting);
     }
 
     @Override
     public Mono<Voting> update(Voting voting, String id) {
         return votingRepository.findById(id).flatMap(result->{
-            result.setVotingDate(voting.getVotingDate());
             result.setDescription(voting.getDescription());
             result.setVotingStatus(voting.getVotingStatus());
             return votingRepository.save(result);
@@ -37,7 +37,7 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
-    public Mono<Void> delete(String id) {
-        return votingRepository.deleteById(id);
+    public Mono<String> delete(String id) {
+        return votingRepository.deleteById(id).thenReturn("Id eliminado:"+id);
     }
 }

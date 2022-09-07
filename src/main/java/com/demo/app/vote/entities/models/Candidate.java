@@ -1,7 +1,8 @@
 package com.demo.app.vote.entities.models;
 
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
+
+import javax.persistence.ManyToOne;
 
 @Data
 public class Candidate {
@@ -12,6 +13,5 @@ public class Candidate {
     private String dni;
     private Boolean gender;
     private String birthDate;
-    @ManyToOne
     private PoliticalParty politicalParty;
 }

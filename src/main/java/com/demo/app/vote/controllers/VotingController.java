@@ -33,7 +33,7 @@ public class VotingController {
         return votingService.update(voting,id).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
     }
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> delete(@PathVariable String id){
-        return votingService.delete(id).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
+    public ResponseEntity<Mono<String>> delete(@PathVariable String id){
+        return ResponseEntity.ok(votingService.delete(id));
     }
 }

@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @RestController
@@ -30,17 +31,6 @@ public class VotingDateController {
     public ResponseEntity<Flux<VotingDate>> findAll(){
         Flux<VotingDate> dates = votingDateService.findAll();
         return ResponseEntity.ok(dates);
-    }
-
-    @GetMapping("/aea/{date}")
-    public ResponseEntity<Flux<VotingDate>> findAllBy(@PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date date) throws ParseException {
-        Date expiryDate = new SimpleDateFormat("dd-MM-yyyy").parse("22-05-1999");
-        Flux<VotingDate> dates = votingDateService.findAllByDate(expiryDate);
-        return ResponseEntity.ok(dates);
-    }
-    @PutMapping("/cron/function/{name}/{date}")
-    public ResponseEntity<Flux<VotingGroup>> updateGroupStatus(@PathVariable String name, @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date date){
-        return ResponseEntity.ok(votingDateService.updateVotingGroupByDateGroup(name,date));
     }
     @PostMapping
     public ResponseEntity<Flux<VotingGroup>> saveDate(@RequestBody VotingDate votingDate){

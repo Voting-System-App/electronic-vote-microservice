@@ -8,5 +8,5 @@ public interface VotingService {
     Flux<Voting> findAll();
     Mono<Voting> save(Voting voting);
     Mono<Voting> update(Voting voting, String id);
-    Mono<Void> delete(String id);
+    Mono<String> delete(String id);
 }
