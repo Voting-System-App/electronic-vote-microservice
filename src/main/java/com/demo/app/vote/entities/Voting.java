@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 
 @Document(collection = "voting")
 @Data
-public class Voting {
+public class Voting extends Audit{
     @Id
     private String id;
     private String description;

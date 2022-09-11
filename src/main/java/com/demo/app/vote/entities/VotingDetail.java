@@ -15,7 +15,7 @@ import java.util.List;
 
 @Document(collection = "voting_detail")
 @Data
-public class VotingDetail {
+public class VotingDetail extends Audit{
     @Id
     private String id;
     @OneToOne

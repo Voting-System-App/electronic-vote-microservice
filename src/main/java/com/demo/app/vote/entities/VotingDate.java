@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Document(collection = "voting_date")
 @Data
-public class VotingDate {
+public class VotingDate extends Audit{
     @Id
     private String id;
     @JsonFormat(pattern = "dd-MM-yyyy")
