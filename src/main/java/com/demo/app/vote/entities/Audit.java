@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class Audit {
+public class Audit<T> {
     @CreatedDate
     @Field(name = "create_at")
     private Date createAt;

@@ -9,18 +9,18 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToOne;
+import java.util.Date;
 
 @Document(collection = "voting")
 @Data
-public class Voting extends Audit{
+public class Voting extends Audit<String>{
     @Id
     private String id;
     private String description;
     @Field(name = "voting_status")
     @Enumerated(EnumType.STRING)
     private VotingStatus votingStatus;
-    @OneToOne
-    private VotingDate votingDate;
+    private Date votingDate;
     @Field(name = "is_active")
     private Boolean isActive;
 }

@@ -1,6 +1,7 @@
 package com.demo.app.vote.controllers;
 
 import com.demo.app.vote.entities.Voting;
+import com.demo.app.vote.entities.VotingGroup;
 import com.demo.app.vote.services.VotingService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,11 @@ public class VotingController {
     public ResponseEntity<Flux<Voting>> findAll(){
         Flux<Voting> voting = votingService.findAll();
         return ResponseEntity.ok(voting);
+    }
+    @GetMapping("/groups")
+    public ResponseEntity<Flux<VotingGroup>> findAllGroups(){
+        Flux<VotingGroup> groups = votingService.findAllGroups();
+        return ResponseEntity.ok(groups);
     }
     @PostMapping
     public ResponseEntity<Mono<Voting>> saveVoting(@RequestBody Voting voting){
