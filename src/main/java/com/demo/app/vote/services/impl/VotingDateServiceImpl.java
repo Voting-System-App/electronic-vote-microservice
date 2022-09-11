@@ -35,16 +35,17 @@ public class VotingDateServiceImpl implements VotingDateService {
         this.votingGroupRepository = votingGroupRepository;
         this.votingRepository = votingRepository;
     }
-    private Flux<VotingGroup> updateVotingGroupByDateGroup(String name,Date date) {
-        Flux<VotingGroup> listGeneralGroup = votingGroupRepository.findAllByVotingDate_DateBetween(dateTime.minusDays(date),date).flatMap(list->{
+    private Mono<VotingGroup> updateVotingGroupByDateGroup(String name) {
+        Flux<VotingGroup> generalGroup = votingGroupRepository.findAll().flatMap(list->{
             list.setIsActive(false);
             return votingGroupRepository.save(list);
         });
-        Flux<VotingGroup> listSingleGroup = votingGroupRepository.findAllByNameAndAndVotingDate_DateBetween(name,dateTime.minusDays(date),date).flatMap(list->{
+        Mono<VotingGroup> singleGroup = votingGroupRepository.findByName(name).flatMap(list->{
+            System.out.println(list);
             list.setIsActive(true);
             return votingGroupRepository.save(list);
         });
-        return listGeneralGroup.thenMany(listSingleGroup);
+        return generalGroup.then(singleGroup);
     }
     private Flux<Voting> updateVotingStatus(Date date){
         return votingRepository.findAllByVotingDate_DateBetween(dateTime.minusDays(date),date).flatMap(result->{
@@ -57,46 +58,37 @@ public class VotingDateServiceImpl implements VotingDateService {
     public Flux<VotingDate> findAll() {
         return votingDateRepository.findAll();
     }
+
     @Override
-    @Transactional
-    public Flux<VotingGroup> save(VotingDate votingDate){
-        List<String> group = Arrays.asList("A","B","C","D","E","F","G","H","I","J");
-        List<String> date = Arrays.asList("07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00");
-        List<VotingGroup> list = new ArrayList<>();
-        return votingDateRepository.save(votingDate).flatMap(result->{
-            for (int i = 0; i < 10; i++) {
-                VotingGroup data = new VotingGroup();
-                data.setName(String.valueOf(group.get(i)));
-                data.setTime(date.get(i));
-                data.setIsActive(false);
-                data.setVotingDate(result);
-                list.add(data);
-            }
-            return votingGroupRepository.saveAll(list).then(Mono.just(result));
-        }).flatMapMany(groupDate-> votingGroupRepository.findAllByVotingDate_Id(groupDate.getId()));
+    @Transactional(readOnly = true)
+    public Flux<VotingGroup> findAllGroups() {
+        return votingGroupRepository.findAll();
     }
+
     @Override
     @Transactional
     public Mono<VotingDate> update(VotingDate votingDate, String id) {
-        return votingDateRepository.findById(id).flatMap(result->{
+        return votingDateRepository.findById(id).flatMap(result-> {
             result.setDate(votingDate.getDate());
-            return votingGroupRepository.findAllByVotingDate_Id(id).flatMap(groups->{
-                        groups.setVotingDate(result);
-                        return votingGroupRepository.save(groups);
-                    }
-            ).flatMap(chain-> votingRepository.findByVotingDate_Id(id).flatMap(data->{
-               data.setVotingDate(chain.getVotingDate());
-               return votingRepository.save(data);
-            })).then(votingDateRepository.save(result));
+            return votingRepository.findByVotingDate_Id(id).flatMap(data -> {
+                data.setVotingDate(votingDate);
+                return votingRepository.save(data);
+            }).then(votingDateRepository.save(result));
         });
     }
+
+    @Override
+    public Mono<VotingDate> save(VotingDate votingDate) {
+        return votingDateRepository.save(votingDate);
+    }
+
     @Scheduled(cron = "0 0 7,17 * * *")
     public void updateVotingGroup(){
         LocalDate localDate = LocalDate.now(ZoneId.of("America/Lima"));
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         LocalTime time = LocalTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        updateVotingGroupByDateGroup(dateTime.compareHours(time),date).subscribeOn(Schedulers.immediate()).subscribe();
+        System.out.println(dateTime.compareHours(time));
+        updateVotingGroupByDateGroup(dateTime.compareHours(time)).subscribeOn(Schedulers.immediate()).subscribe();
         updateVotingStatus(date).subscribeOn(Schedulers.immediate()).subscribe();
     }
 }

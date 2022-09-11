@@ -6,7 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
 @Document(collection = "voting_group")
@@ -20,6 +19,4 @@ public class VotingGroup {
     private String time;
     @Field(name = "is_active")
     private Boolean isActive;
-    @ManyToOne
-    private VotingDate votingDate;
 }

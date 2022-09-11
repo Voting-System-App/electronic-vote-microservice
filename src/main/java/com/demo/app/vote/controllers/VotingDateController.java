@@ -32,8 +32,13 @@ public class VotingDateController {
         Flux<VotingDate> dates = votingDateService.findAll();
         return ResponseEntity.ok(dates);
     }
+    @GetMapping("/groups")
+    public ResponseEntity<Flux<VotingGroup>> findAllGroups(){
+        Flux<VotingGroup> groups = votingDateService.findAllGroups();
+        return ResponseEntity.ok(groups);
+    }
     @PostMapping
-    public ResponseEntity<Flux<VotingGroup>> saveDate(@RequestBody VotingDate votingDate){
+    public ResponseEntity<Mono<VotingDate>> saveDate(@RequestBody VotingDate votingDate){
         return ResponseEntity.ok(votingDateService.save(votingDate));
     }
     @PutMapping("/{id}")

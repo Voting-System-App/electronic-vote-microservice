@@ -8,6 +8,8 @@ import reactor.core.publisher.Mono;
 
 public interface VotingDateService {
     Flux<VotingDate> findAll();
-    Flux<VotingGroup> save(VotingDate votingDate);
+    Flux<VotingGroup> findAllGroups();
     Mono<VotingDate> update(VotingDate votingDate,String id);
+
+    Mono<VotingDate> save(VotingDate votingDate);
 }
