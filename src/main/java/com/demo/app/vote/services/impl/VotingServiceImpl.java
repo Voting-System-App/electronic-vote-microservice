@@ -36,6 +36,12 @@ public class VotingServiceImpl implements VotingService {
     public Flux<VotingGroup> findAllGroups() {
         return votingGroupRepository.findAll();
     }
+
+    @Override
+    public Mono<Boolean> isActiveVote(String name) {
+        return votingGroupRepository.findByName(name).flatMap(result-> result.getIsActive()?Mono.just(true):Mono.just(false));
+    }
+
     private Mono<VotingGroup> updateVotingGroupByDateGroup(String name) {
         Flux<VotingGroup> generalGroup = votingGroupRepository.findAll().flatMap(list->{
             list.setIsActive(false);

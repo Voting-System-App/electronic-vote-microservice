@@ -30,6 +30,10 @@ public class VotingController {
         Flux<VotingGroup> groups = votingService.findAllGroups();
         return ResponseEntity.ok(groups);
     }
+    @GetMapping("/group/{name}/status")
+    public Mono<Boolean> findGroupStatus(@PathVariable String name){
+        return votingService.isActiveVote(name);
+    }
     @PostMapping
     public ResponseEntity<Mono<Voting>> saveVoting(@RequestBody Voting voting){
         return ResponseEntity.ok(votingService.save(voting));
