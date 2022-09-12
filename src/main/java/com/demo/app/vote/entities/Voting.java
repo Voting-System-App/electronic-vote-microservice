@@ -1,6 +1,7 @@
 package com.demo.app.vote.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,7 +21,8 @@ public class Voting extends Audit<String>{
     @Field(name = "voting_status")
     @Enumerated(EnumType.STRING)
     private VotingStatus votingStatus;
-    private Date votingDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date date;
     @Field(name = "is_active")
     private Boolean isActive;
 }

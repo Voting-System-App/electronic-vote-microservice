@@ -48,7 +48,7 @@ public class VotingServiceImpl implements VotingService {
         return generalGroup.then(singleGroup);
     }
     private Flux<Voting> updateVotingStatus(Date date){
-        return votingRepository.findAllByVotingDate_DateBetween(dateTime.minusDays(date),date).flatMap(result->{
+        return votingRepository.findAllByDateBetween(dateTime.minusDays(date),date).flatMap(result->{
             result.setIsActive(true);
             return votingRepository.save(result);
         });
@@ -69,7 +69,7 @@ public class VotingServiceImpl implements VotingService {
     public Mono<Voting> update(Voting voting, String id) {
         return votingRepository.findById(id).flatMap(result->{
             result.setDescription(voting.getDescription());
-            result.setVotingDate(voting.getVotingDate());
+            result.setDate(voting.getDate());
             result.setVotingStatus(voting.getVotingStatus());
             return votingRepository.save(result);
         });
