@@ -2,6 +2,7 @@ package com.demo.app.vote.controllers;
 
 import com.demo.app.vote.entities.Voting;
 import com.demo.app.vote.entities.VotingGroup;
+import com.demo.app.vote.entities.VotingStatus;
 import com.demo.app.vote.services.VotingService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,10 @@ public class VotingController {
     public ResponseEntity<Flux<VotingGroup>> findAllGroups(){
         Flux<VotingGroup> groups = votingService.findAllGroups();
         return ResponseEntity.ok(groups);
+    }
+    @GetMapping("/status/{status}")
+    public ResponseEntity<Flux<Voting>> findVotingStatus(@PathVariable VotingStatus status){
+        return ResponseEntity.ok(votingService.findByStatus(status));
     }
     @GetMapping("/group/{name}/status")
     public Mono<Boolean> findGroupStatus(@PathVariable String name){

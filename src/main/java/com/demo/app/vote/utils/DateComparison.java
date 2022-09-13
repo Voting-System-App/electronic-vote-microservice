@@ -32,12 +32,10 @@ public class DateComparison {
         List<LocalTime> rangeEnd = Arrays.asList(LocalTime.parse("08:00:00"),LocalTime.parse("09:00:00")
                 ,LocalTime.parse("10:00:00"),LocalTime.parse("11:00:00"),LocalTime.parse("12:00:00"),LocalTime.parse("13:00:00"),
                 LocalTime.parse("14:00:00"),LocalTime.parse("15:00:00"),LocalTime.parse("16:00:00"),LocalTime.parse("17:00:00"),LocalTime.parse("18:00:00"));
-        for (int i = 0; i < 10; i++) {
-            if (!time.isBefore(rangeStart.get(i)) && time.isBefore(rangeEnd.get(i))) {
-                flag = i;
-                break;
-            }
+        for (int i = 0; i < 11; i++) {
+            flag = !time.isBefore(rangeStart.get(i)) && time.isBefore(rangeEnd.get(i))?i:10;
         }
+        System.out.println(group.get(flag));
         return group.get(flag);
     }
 }

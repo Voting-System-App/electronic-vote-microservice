@@ -14,9 +14,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Service
@@ -42,6 +41,11 @@ public class VotingServiceImpl implements VotingService {
         return votingGroupRepository.findByName(name).flatMap(result-> result.getIsActive()?Mono.just(true):Mono.just(false));
     }
 
+    @Override
+    public Flux<Voting> findByStatus(VotingStatus status) {
+        return votingRepository.findAllByVotingStatus(status);
+    }
+
     private Mono<VotingGroup> updateVotingGroupByDateGroup(String name) {
         Flux<VotingGroup> generalGroup = votingGroupRepository.findAll().flatMap(list->{
             list.setIsActive(false);
@@ -52,6 +56,14 @@ public class VotingServiceImpl implements VotingService {
             return votingGroupRepository.save(list);
         });
         return generalGroup.then(singleGroup);
+    }
+    private Flux<Voting> updateStatus(Date date){
+        return votingRepository.findAll().flatMap(result->{
+            if(result.getDate().before(date)){
+                result.setVotingStatus(VotingStatus.COMPLETED);
+            }
+            return votingRepository.save(result);
+        });
     }
     private Flux<Voting> updateVotingStatus(Date date){
         return votingRepository.findAllByDateBetween(dateTime.minusDays(date),date).flatMap(result->{
@@ -86,12 +98,15 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.deleteById(id).thenReturn("Id eliminado:"+id);
     }
 
-    @Scheduled(cron = "0 0 7,17 * * *")
+    @Scheduled(cron = "0 0/5 * * * ?",zone = "America/Lima")
     public void updateVotingGroup(){
         LocalDate localDate = LocalDate.now(ZoneId.of("America/Lima"));
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        LocalTime time = LocalTime.now();
+        ZonedDateTime zone = ZonedDateTime.ofInstant(Instant.now(),ZoneId.of("America/Lima"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime time = LocalTime.parse(zone.format(formatter));
         updateVotingGroupByDateGroup(dateTime.compareHours(time)).subscribeOn(Schedulers.immediate()).subscribe();
         updateVotingStatus(date).subscribeOn(Schedulers.immediate()).subscribe();
+        updateStatus(date).subscribeOn(Schedulers.immediate()).subscribe();
     }
 }
