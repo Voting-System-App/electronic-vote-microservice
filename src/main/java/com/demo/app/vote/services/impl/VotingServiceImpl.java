@@ -46,6 +46,11 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.findAllByVotingStatus(status);
     }
 
+    @Override
+    public Flux<Voting> findByCityAndStatus(String city, VotingStatus status) {
+        return votingRepository.findAllByCityAndVotingStatus(city, status);
+    }
+
     private Mono<VotingGroup> updateVotingGroupByDateGroup(String name) {
         Flux<VotingGroup> generalGroup = votingGroupRepository.findAll().flatMap(list->{
             list.setIsActive(false);
@@ -88,6 +93,7 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.findById(id).flatMap(result->{
             result.setDescription(voting.getDescription());
             result.setDate(voting.getDate());
+            result.setCity(voting.getCity());
             result.setVotingStatus(voting.getVotingStatus());
             return votingRepository.save(result);
         });

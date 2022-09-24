@@ -23,6 +23,7 @@ public class Voting extends Audit<String>{
     private VotingStatus votingStatus;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
+    private String city;
     @Field(name = "is_active")
     private Boolean isActive;
 }

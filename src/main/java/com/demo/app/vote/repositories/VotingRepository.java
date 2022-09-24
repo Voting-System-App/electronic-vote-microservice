@@ -12,4 +12,5 @@ import java.util.Date;
 public interface VotingRepository extends ReactiveMongoRepository<Voting,String> {
     Flux<Voting> findAllByDateBetween(Date startDate, Date endDate);
     Flux<Voting> findAllByVotingStatus(VotingStatus status);
+    Flux<Voting> findAllByCityAndVotingStatus(String city,VotingStatus status);
 }

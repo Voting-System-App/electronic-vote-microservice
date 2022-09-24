@@ -31,6 +31,10 @@ public class VotingController {
         Flux<VotingGroup> groups = votingService.findAllGroups();
         return ResponseEntity.ok(groups);
     }
+    @GetMapping("/city/{city}/status/{status}")
+    public ResponseEntity<Flux<Voting>> findVotingByCityAndStatus(@PathVariable String city,@PathVariable VotingStatus status){
+        return ResponseEntity.ok(votingService.findByCityAndStatus(city, status));
+    }
     @GetMapping("/status/{status}")
     public ResponseEntity<Flux<Voting>> findVotingStatus(@PathVariable VotingStatus status){
         return ResponseEntity.ok(votingService.findByStatus(status));

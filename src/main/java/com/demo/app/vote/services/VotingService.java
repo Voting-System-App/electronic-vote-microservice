@@ -10,6 +10,7 @@ public interface VotingService {
     Flux<VotingGroup> findAllGroups();
     Mono<Boolean> isActiveVote(String name);
     Flux<Voting> findByStatus(VotingStatus status);
+    Flux<Voting> findByCityAndStatus(String city,VotingStatus status);
     Flux<Voting> findAll();
     Mono<Voting> save(Voting voting);
     Mono<Voting> update(Voting voting, String id);
