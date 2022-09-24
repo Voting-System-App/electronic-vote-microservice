@@ -26,6 +26,10 @@ public class VotingController {
         Flux<Voting> voting = votingService.findAll();
         return ResponseEntity.ok(voting);
     }
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<Voting>> findById(@PathVariable String id){
+        return votingService.findById(id).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
+    }
     @GetMapping("/groups")
     public ResponseEntity<Flux<VotingGroup>> findAllGroups(){
         Flux<VotingGroup> groups = votingService.findAllGroups();

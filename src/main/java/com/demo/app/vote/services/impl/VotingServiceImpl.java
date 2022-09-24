@@ -37,6 +37,11 @@ public class VotingServiceImpl implements VotingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Mono<Voting> findById(String id) {
+        return votingRepository.findById(id);
+    }
+    @Override
     public Mono<Boolean> isActiveVote(String name) {
         return votingGroupRepository.findByName(name).flatMap(result-> result.getIsActive()?Mono.just(true):Mono.just(false));
     }

@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 
 public interface VotingService {
     Flux<VotingGroup> findAllGroups();
+    Mono<Voting> findById(String id);
     Mono<Boolean> isActiveVote(String name);
     Flux<Voting> findByStatus(VotingStatus status);
     Flux<Voting> findByCityAndStatus(String city,VotingStatus status);
