@@ -8,6 +8,7 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface VotingDetailRepository extends ReactiveMongoRepository<VotingDetail,String> {
     Flux<VotingDetail> findAllByCandidateList_Id(String id);
+    Flux<VotingDetail> findAllByVoter_Id(String id);
     Flux<VotingDetail> findAllByCandidateList_PoliticalParty_Id(String id);
     Flux<VotingDetail> findAllByVoter_City(String name);
     Flux<VotingDetail> findAllByVoting_Id(String id);

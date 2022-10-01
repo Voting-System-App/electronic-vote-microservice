@@ -39,6 +39,10 @@ public class VotingController {
     public ResponseEntity<Flux<Voting>> findVotingByCityAndStatus(@PathVariable String city,@PathVariable VotingStatus status){
         return ResponseEntity.ok(votingService.findByCityAndStatus(city, status));
     }
+    @GetMapping("/city/{city}/status/{status}/voter/{id}")
+    public ResponseEntity<Flux<Voting>> findVotingByCityAndStatusAndVoterId(@PathVariable String city,@PathVariable VotingStatus status,@PathVariable String id){
+        return ResponseEntity.ok(votingService.findByAndUserCityAndStatus(city, status,id));
+    }
     @GetMapping("/status/{status}")
     public ResponseEntity<Flux<Voting>> findVotingStatus(@PathVariable VotingStatus status){
         return ResponseEntity.ok(votingService.findByStatus(status));

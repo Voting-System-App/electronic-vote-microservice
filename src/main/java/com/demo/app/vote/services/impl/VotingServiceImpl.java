@@ -1,8 +1,10 @@
 package com.demo.app.vote.services.impl;
 
 import com.demo.app.vote.entities.Voting;
+import com.demo.app.vote.entities.VotingDetail;
 import com.demo.app.vote.entities.VotingGroup;
 import com.demo.app.vote.entities.VotingStatus;
+import com.demo.app.vote.repositories.VotingDetailRepository;
 import com.demo.app.vote.repositories.VotingGroupRepository;
 import com.demo.app.vote.repositories.VotingRepository;
 import com.demo.app.vote.services.VotingService;
@@ -16,18 +18,22 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class VotingServiceImpl implements VotingService {
 
     private final VotingRepository votingRepository;
     private final DateComparison dateTime;
+    private final VotingDetailRepository votingDetailRepository;
     private final VotingGroupRepository votingGroupRepository;
 
-    public VotingServiceImpl(VotingRepository votingRepository, DateComparison dateTime, VotingGroupRepository votingGroupRepository) {
+    public VotingServiceImpl(VotingRepository votingRepository, DateComparison dateTime, VotingDetailRepository votingDetailRepository, VotingGroupRepository votingGroupRepository) {
         this.votingRepository = votingRepository;
         this.dateTime = dateTime;
+        this.votingDetailRepository = votingDetailRepository;
         this.votingGroupRepository = votingGroupRepository;
     }
     @Override
@@ -51,6 +57,19 @@ public class VotingServiceImpl implements VotingService {
         return votingRepository.findAllByVotingStatus(status);
     }
 
+    @Override
+    public Flux<Voting> findByAndUserCityAndStatus(String city, VotingStatus status,String voterId) {
+        List<String> id = new ArrayList<>();
+        Flux<VotingDetail> list = votingDetailRepository.findAllByVoter_Id(voterId);
+        Flux<Voting> completedList = votingRepository.findAllByCityAndVotingStatusAndIdIsIn(city,VotingStatus.COMPLETED,id);
+        Flux<Voting> pendingList = votingRepository.findAllByCityAndVotingStatusAndIdIsIn(city,VotingStatus.PENDING,id);
+        return list.collectList().flatMapMany(result->{
+            result.forEach(data->id.add(data.getVoting().getId()));
+            return list;
+        }).thenMany(status.equals(VotingStatus.PENDING) ?
+                votingRepository.findAllByCityAndVotingStatusAndIdIsNotIn(city,status,id):
+                Flux.merge(completedList,pendingList).distinct());
+    }
     @Override
     public Flux<Voting> findByCityAndStatus(String city, VotingStatus status) {
         return votingRepository.findAllByCityAndVotingStatus(city, status);
