@@ -2,9 +2,9 @@ package com.demo.app.vote.entities.models;
 
 
 import com.bol.secure.Encrypted;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import java.util.Date;
 
 @Data
 public class Voter {
@@ -17,12 +17,17 @@ public class Voter {
     private String email;
     @Encrypted
     private String dni;
+    private Boolean gender;
     @Encrypted
-    private String gender;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date birthDate;
     @Encrypted
-    private String birthDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date emissionDate;
+    @Encrypted
+    private String fingerPrint;
     @Encrypted
     private String city;
     @Encrypted
-    private String fingerPrint;
+    private String group;
 }

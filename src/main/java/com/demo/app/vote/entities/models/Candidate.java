@@ -24,4 +24,5 @@ public class Candidate {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date birthDate;
     private PoliticalParty politicalParty;
+    private String votingId;
 }

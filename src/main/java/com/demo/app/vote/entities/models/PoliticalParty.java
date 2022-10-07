@@ -14,4 +14,5 @@ public class PoliticalParty {
     @Encrypted
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date creationDate;
+    private Boolean status;
 }
